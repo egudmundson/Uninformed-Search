@@ -1,0 +1,32 @@
+from Node import Node
+
+def left(node):
+	print "left" 
+def right(node):
+	print "right"
+def up(node):
+	print "up"
+def down(node):
+	print "down"
+
+def getActions(node):
+	count =0
+	for x in node.state:
+		if(x ==0):
+			break
+		count+=1
+
+	if(count == 4):# block in the middle
+		return [left,right,up,down]
+	elif(count == 3):
+		return [up,down,right]
+	elif(count == 5):
+		return [up,down,left]
+	elif(count==0):
+		return [down,right]
+	elif(count == 1):
+		return [down,left,right]
+	elif(count == 2):
+		return [down,left]
+	
+
