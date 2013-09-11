@@ -34,17 +34,43 @@ def BreadthSearch(start,goal):
 		expanded.append(current)
 def BiDirectional(start,goal):
 	expanded = hashTable()
-	fronteirtop = deque()
+	fronteirTop = deque()
 	fronteirBot = deque()
 	if(start == goal):
 		return Answer(goal,expanded)
-	fronteirtop.append(start)
+	fronteirTop.append(start)
 	fronteirBot.append(goal)
-	while(len(fronteirtop) != 0 and len(fronteirBot)!=0):
-		topNode = fronteirtop.popleft()
+	while(len(fronteirTop) != 0 and len(fronteirBot)!=0):
+		topNode = fronteirTop.popleft()
 		if(contains(fronteirBot,topNode)):
-			return createAnswer(topNode,fronteirBot)
-		 
+			return createAnswer(topNode,fronteirBot,expanded)
+		Actions = getActions(topNode)
+		for x in Actions:
+			 newNode =Node(topNode,x)
+			 if (contains(fronteirBot,newNode)):
+				return createAnswer(fronteirBot,newNode,expanded)
+			 else:
+				 if(expanded.contains(newNode)):
+					 print "found in expanded"
+				 else:
+				 	fronteirTop.append(newNode)
+					print "Adding To Top"
+		botNode = fronteirBot.popleft()
+		if(contains(fronteirTop,botNode)):
+				return createAnswer(fronteirTop,botNode,Expanded)
+		Actions = getActions(botNode)
+		for x in Actions:
+			newNode = Node(botNode,x)
+			if (contains(fronteirTop,newNode)):
+				return createAnswer(fronteirTop,newNode,expanded)
+			else:
+				if(expanded.contains(newNode)):
+						print "found in expanded"
+				else:
+					fronteirBot.append(newNode)
+					print "Added To bot"
+		expanded.append(topNode)
+		expanded.append(botNode)
 
 
 def contains(fronteir,node):
@@ -55,6 +81,6 @@ def contains(fronteir,node):
 	return contains
 
 
-def createAnswer(node,frontier):
+def createAnswer(node,frontier,Expanded):
 	print "here"
 	return "test"
