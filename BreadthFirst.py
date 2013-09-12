@@ -51,10 +51,9 @@ def BiDirectional(start,goal):
 				return createAnswer(fronteirBot,newNode,expanded)
 			 else:
 				 if(expanded.contains(newNode)):
-					 print "found in expanded"
+					 count = 1
 				 else:
 				 	fronteirTop.append(newNode)
-					print "Adding To Top"
 		botNode = fronteirBot.popleft()
 		if(contains(fronteirTop,botNode)):
 				return createAnswer(fronteirTop,botNode,Expanded)
@@ -62,13 +61,12 @@ def BiDirectional(start,goal):
 		for x in Actions:
 			newNode = Node(botNode,x)
 			if (contains(fronteirTop,newNode)):
-				return createAnswer(fronteirTop,newNode,expanded)
+				return createAnswerBot(fronteirTop,newNode,expanded)
 			else:
 				if(expanded.contains(newNode)):
-						print "found in expanded"
+						count = 1
 				else:
 					fronteirBot.append(newNode)
-					print "Added To bot"
 		expanded.append(topNode)
 		expanded.append(botNode)
 
@@ -81,6 +79,58 @@ def contains(fronteir,node):
 	return contains
 
 
-def createAnswer(node,frontier,Expanded):
-	print "here"
-	return "test"
+def createAnswerBot(frontier,node,Expanded):
+	botstart = None
+	nodes = deque()
+	bot = node;
+	nodes.append(bot)
+	while(bot.parent != None):
+		nodes.append(bot.parent)
+		bot = bot.parent
+
+	for x in frontier:
+		if(node.state == x.state):
+			botStart = x
+			break
+	if(botStart != None):
+		while (botStart.parent != None):
+			nodes.appendleft(botStart.parent)
+			botStart = botStart.parent
+	
+	count = len(nodes)-1
+	order = deque()
+	while(count!=-1):	
+		tmp = nodes[count]		
+		order.appendleft(tmp)
+		count -=1
+	return createdAnswer(order,Expanded)
+
+
+def createAnswer(frontier,node,Expanded):
+	botStart = None
+	nodes = deque()
+	top = node
+	while(top.parent != None):
+		nodes.appendleft(top)
+	for x in frontier:
+		if(node.state == x.state):
+			botStart = x
+			break;
+	while(botStart.parent != None):
+		nodes.append(botStart)
+		botStart= botStart.parent
+
+	return createdAnswer(nodes,Expanded)
+def createdAnswer(nodes,expanded):
+	node = nodes.popleft()
+	start = Node(node.state)
+	while(len(nodes)!=0):
+		start = CheckAction(nodes[0].state,start)
+		tmp = nodes.popleft()
+	return Answer(start,expanded)
+def CheckAction(state,parent):
+	actions = getActions(parent)
+	for x in actions:
+		if(state == x(parent)):
+			return Node(parent,x)
+
